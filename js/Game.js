@@ -16,7 +16,11 @@ class Game {
       gameState: state
     });
   }
-
+  updateRank(state){
+    database.ref('/').update({
+      carsAtEnd: state
+    });
+  }
   async start(){
     if(gameState === 0){
       player = new Player();
@@ -42,7 +46,7 @@ class Game {
 
   play(){
     form.hide();
-
+    player.getCarsAtEnd();
     Player.getPlayerInfo();
     
     if(allPlayers !== undefined){
@@ -90,10 +94,15 @@ class Game {
     }
     if(player.distance>3860){
       gameState=2
+      player.rank+=1
+      Player.updateCarsAtEnd(player.rank)
+      form.playerName.show();
+      form.playerName.html("Player: "+player.name +" rank: "+player.rank)
     }
     drawSprites();
   }
   end(){
     console.log("game End",gameState)
+    console.log(player.rank)
   }
 }
